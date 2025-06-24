@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Te Amo Dafne</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+      color: hotpink;
+    }
+
+    #mensaje {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: hotpink;
+      font-size: 4em;
+      text-shadow: 0 0 10px pink, 0 0 20px deeppink;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .corazon {
+      position: absolute;
+      color: hotpink;
+      font-size: 2em;
+      animation: flotar 2s ease-out forwards;
+      pointer-events: none;
+      white-space: nowrap;
+      text-shadow: 0 0 10px pink;
+      z-index: 20;
+    }
+
+    @keyframes flotar {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-120px) scale(1.6);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <div id="mensaje">Dafne</div>
+
+  <script>
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const fontSize = 20;
+    const columns = Math.floor(canvas.width / fontSize / 4); // Menos columnas para menos lluvia
+    const drops = Array(columns).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "hotpink";
+      ctx.font = fontSize + "px Arial";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = Math.random() > 0.5 ? "❤️" : "TE AMO";
+        const x = i * fontSize * 4;
+        const y = drops[i] * fontSize;
+
+        ctx.fillText(text, x, y);
+
+        if (y > canvas.height && Math.random() > 0.95) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 80);
+
+    document.addEventListener("click", (e) => {
+      const corazon = document.createElement("div");
+      corazon.className = "corazon";
+      corazon.style.left = `${e.clientX}px`;
+      corazon.style.top = `${e.clientY}px`;
+      corazon.innerText = "TE AMO ❤️🐈‍⬛";
+      document.body.appendChild(corazon);
+
+      setTimeout(() => {
+        corazon.remove();
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
